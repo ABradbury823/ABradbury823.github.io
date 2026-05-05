@@ -9,6 +9,16 @@ template.innerHTML = `
 
 .project{
     border-radius: 10px;
+    overflow: hidden;
+    transition: height 0.4s ease, opacity 0.4s ease;
+}
+
+.hidden{
+    opacity: 0;
+}
+
+.shown{
+    opacity: 1;
 }
 
 .project-btn{
@@ -65,7 +75,8 @@ class ProjDesc extends HTMLElement {
         this.content = this.shadowRoot.querySelector(".project");
         this.button = this.shadowRoot.querySelector(".project-btn");
 
-        this.content.hidden = false;
+        this.content.style.height = "0px";
+        this.content.classList.add("hidden");
 
         //button event
         this.button.onclick = e => this.toggleVisible();
@@ -78,11 +89,32 @@ class ProjDesc extends HTMLElement {
     }
 
     render(){
-        this.content.hidden ? this.button.innerHTML = "Show More&ensp;&#x2193;" : this.button.innerHTML = "Show Less&ensp;&#x2191;";
+        if(this.content.classList.contains("hidden")) {
+            this.button.innerHTML = "Show More&ensp;&#x2193;";
+
+        } else {
+            this.button.innerHTML = "Show Less&ensp;&#x2191;";
+        }
     }
 
     toggleVisible(){
-        this.content.hidden = !this.content.hidden;
+        // expanding
+        if(this.content.classList.contains("hidden")){
+            this.content.classList.replace("hidden", "shown");
+            this.content.style.height = this.content.scrollHeight + "px";
+
+            this.content.addEventListener("transitionend", () => {
+                this.content.style.height = "auto";
+            }, { once: true });
+        } 
+        // collapsing
+        else {
+            this.content.style.height = this.content.scrollHeight + "px";
+            this.content.getBoundingClientRect(); // force reflow to ensure transition starts
+            this.content.style.height = "0px";
+            this.content.classList.replace("shown", "hidden");
+        }
+
         this.render();
     }
 
