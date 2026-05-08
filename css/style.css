@@ -132,6 +132,15 @@ image-slider img, image-slider video, image-slider iframe {
     z-index: 1;
 }
 
+.slide-contain{
+    object-fit: contain;
+}
+
+.slide-contain-light{
+    object-fit: contain;
+    background-color: #dddddd;
+}
+
 .multiline {
     white-space: pre-line;
 }
